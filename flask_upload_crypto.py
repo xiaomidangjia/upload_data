@@ -35,7 +35,7 @@ def upload_date():
 
     content = '北京时间%s文件上传成功'%(date)
     
-    DingtalkChatbot(dingding_url).send_text(msg=content,is_auto_at=True)
+    #DingtalkChatbot(dingding_url).send_text(msg=content,is_auto_at=True)
 
     res = {'value':'Finish'}
     return res
