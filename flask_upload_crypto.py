@@ -25,8 +25,9 @@ def upload_date():
         crypto_direction = data_list[i]['crypto_direction']
         crypto_type = data_list[i]['crypto_type']
         crypto_open = data_list[i]['crypto_open']
-        crypto_close = data_list[i]['crypto_close']
-        sub_df = pd.DataFrame({'crypto_name':crypto_name,'crypto_direction':crypto_direction,'crypto_type':crypto_type,'crypto_open':crypto_open,'crypto_close':crypto_close},index=[0])
+        crypto_win = data_list[i]['crypto_win']
+        crypto_loss = data_list[i]['crypto_loss']
+        sub_df = pd.DataFrame({'crypto_name':crypto_name,'crypto_direction':crypto_direction,'crypto_type':crypto_type,'crypto_open':crypto_open,'crypto_win':crypto_win,'crypto_loss':crypto_loss},index=[0])
         df = pd.concat([df,sub_df])
 
     df.to_csv('csv_from_chen.csv',encoding='utf-8-sig',index=False)
