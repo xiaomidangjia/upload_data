@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/upload_date", methods=['post'])
 def upload_date():
-    crypto_id = request.form.get('crypto_time')
+    crypto_time = request.form.get('crypto_time')
     crypto_id = request.form.get('crypto_id')
     crypto_name = request.form.get('crypto_name')
     crypto_direction = request.form.get('crypto_direction')
