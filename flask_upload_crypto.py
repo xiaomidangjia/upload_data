@@ -16,28 +16,42 @@ app = Flask(__name__)
 
 @app.route("/upload_date", methods=['post'])
 def upload_date():
-    data_list = request.form.get('data_list')
-    print(data_list)
-    data_list = eval(data_list)
-    df = pd.DataFrame()
-    for i in range(len(data_list)):
-        crypto_id = data_list[i]['crypto_id']
-        crypto_name = data_list[i]['crypto_name']
-        crypto_direction = data_list[i]['crypto_direction']
-        crypto_type = data_list[i]['crypto_type']
-        crypto_open = data_list[i]['crypto_open']
-        crypto_win = data_list[i]['crypto_win']
-        crypto_loss = data_list[i]['crypto_loss']
-        sub_df = pd.DataFrame({'crypto_id':crypto_id,'crypto_name':crypto_name,'crypto_direction':crypto_direction,'crypto_type':crypto_type,'crypto_open':crypto_open,'crypto_win':crypto_win,'crypto_loss':crypto_loss},index=[0])
-        df = pd.concat([df,sub_df])
 
-    df.to_csv('/root/upload_data/csv_from_chen.csv',encoding='utf-8-sig',index=False)
-    print(df)
+    crypto_id = request.form.get('crypto_id')
+    crypto_name = request.form.get('crypto_name')
+    crypto_direction = request.form.get('crypto_direction')
+    crypto_type = request.form.get('crypto_type')
+    crypto_open = request.form.get('crypto_open')
+    crypto_win = request.form.get('crypto_win')
+    crypto_loss = request.form.get('crypto_loss')
 
-    date = pd.to_datetime(str(datetime.utcnow())[0:19]) + timedelta(hours=8)
+    sub_df = pd.DataFrame({'crypto_id':crypto_id,'crypto_name':crypto_name,'crypto_direction':crypto_direction,'crypto_type':crypto_type,'crypto_open':crypto_open,'crypto_win':crypto_win,'crypto_loss':crypto_loss},index=[0])
 
-    content = '北京时间%s文件上传成功'%(date)
-    
+    # 读取历史开单记录
+    p = []
+    with open("/root/upload_data/csv_from_chen.csv", 'r', encoding="UTF-8") as fr:
+        reader = csv.reader(fr)
+        for index, line in enumerate(reader):
+            if index == 0:
+                continue
+            p.append(line)
+    res_data = pd.DataFrame(p)
+    res_data['crypto_id'] = res_data.iloc[:,0]
+    res_data['crypto_name'] = res_data.iloc[:,1]
+    res_data['crypto_direction'] = res_data.iloc[:,2]
+    res_data['crypto_type'] = res_data.iloc[:,3]
+    res_data['crypto_open'] = res_data.iloc[:,4]
+    res_data['crypto_win'] = res_data.iloc[:,5]
+    res_data['crypto_loss'] = res_data.iloc[:,6]
+
+    res_data = res_data[['crypto_id','crypto_name','crypto_direction','crypto_type','crypto_open','crypto_win','crypto_loss']]
+
+    ins = pd.concat([res_data,sub_df])
+
+    ins = ins[['crypto_id','crypto_name','crypto_direction','crypto_type','crypto_open','crypto_win','crypto_loss']]
+
+    ins.to_csv('/root/upload_data/csv_from_chen.csv',encoding='utf-8-sig',index=False)
+
     #DingtalkChatbot(dingding_url).send_text(msg=content,is_auto_at=True)
 
     res = {'value':'Finish'}
